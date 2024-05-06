@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolSystemCore.Models;
+
 
 namespace SchoolSystemCore.Controllers;
 
 public class StudentsController : Controller
 {
     private readonly CollegeDbContext _context;
-
-    public StudentsController(CollegeDbContext context)
+    private readonly BlobServiceClient _blobServiceClient;
+    private readonly BlobContainerClient _containerClient;
+    private const string ContainerName = "web";
+    public StudentsController(CollegeDbContext context, BlobServiceClient blobServiceClient)
     {
         _context = context;
+        _blobServiceClient = blobServiceClient;
+        _containerClient = _blobServiceClient.GetBlobContainerClient(ContainerName);
+        _containerClient.CreateIfNotExists();
     }
 
     // GET: Students
@@ -45,8 +52,12 @@ public class StudentsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,StudentName,Email,Addresss,DOB,PhotoUrl,DepartmentId")] Student student)
+    public async Task<IActionResult> Create([Bind("Id,StudentName,Email,Addresss,DOB,FileName,DepartmentId")] Student student, IFormFile file)
     {
+        string fileName = file.FileName;
+        var blobClient = _containerClient.GetBlobClient(fileName);
+        await blobClient.UploadAsync(file.OpenReadStream(), true);
+        student.FileName = fileName;
         if (ModelState.IsValid)
         {
             _context.Add(student);
@@ -79,7 +90,7 @@ public class StudentsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,StudentName,Email,Addresss,DOB,PhotoUrl,DepartmentId")] Student student)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,StudentName,Email,Addresss,DOB,FileName,DepartmentId")] Student student)
     {
         if (id != student.Id)
         {

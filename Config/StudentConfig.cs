@@ -13,7 +13,7 @@ public class StudentConfig : IEntityTypeConfiguration<Student>
 
         builder.Property(n => n.StudentName).IsRequired().HasMaxLength(250);
         builder.Property(n => n.Addresss).IsRequired(false).HasMaxLength(250);
-        builder.Property(n => n.PhotoUrl).IsRequired(false);
+        builder.Property(n => n.FileName).IsRequired(false);
         builder.Property(n => n.Email).IsRequired().HasMaxLength(250);
         builder.Property(n => n.DOB);
 
