@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "hhttps://schoolsm.azurewebsites.net/"
+      "applicationUrl": "https://schoolsm.azurewebsites.net/"
     },
     "IIS Express": {
       "commandName": "IISExpress",
