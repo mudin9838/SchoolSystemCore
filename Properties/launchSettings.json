@@ -1,29 +1,29 @@
 {
   "profiles": {
-    "http": {
+    "SchoolSystemCore": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://schoolsm.azurewebsites.net/"
-    },
-    "https": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://schoolsm.azurewebsites.net/"
+      "applicationUrl": "https://app-collegesystem-web-eastus-dev-001.azurewebsites.net/"
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "SchoolSystemCores": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7031;http://localhost:5246"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",

@@ -9,6 +9,7 @@ public class Student
     public string Addresss { get; set; }
 
     public DateTime DOB { get; set; }
+    public string PhotoUrl { get; set; }
 
     public int? DepartmentId { get; set; }// student can have a dep't/can't have a dep't
 
