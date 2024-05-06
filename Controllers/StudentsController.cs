@@ -54,12 +54,13 @@ public class StudentsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,StudentName,Email,Addresss,DOB,FileName,DepartmentId")] Student student, IFormFile file)
     {
-        string fileName = file.FileName;
-        var blobClient = _containerClient.GetBlobClient(fileName);
-        await blobClient.UploadAsync(file.OpenReadStream(), true);
-        student.FileName = fileName;
-        if (ModelState.IsValid)
+
+        if (student != null)
         {
+            string fileName = file.FileName;
+            var blobClient = _containerClient.GetBlobClient(fileName);
+            var client = await blobClient.UploadAsync(file.OpenReadStream(), true);
+            student.FileName = blobClient.Uri.ToString();
             _context.Add(student);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
