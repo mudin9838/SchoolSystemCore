@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using SchoolSystemCore.Models;
+using SchoolSystemCore.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,9 @@ var storageConnection = builder.Configuration["ConnectionStrings:Storage"];
 builder.Services.AddSqlServer<CollegeDbContext>(sqlConnection,
     options => options.EnableRetryOnFailure());
 
+builder.Services.AddSingleton<AzureBlobService>();
 builder.Services.AddSingleton(x => new BlobServiceClient(storageConnection));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,8 +1,9 @@
-﻿using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SchoolSystemCore.Data.Constants;
 using SchoolSystemCore.Models;
+using SchoolSystemCore.Service;
 
 
 namespace SchoolSystemCore.Controllers;
@@ -10,15 +11,12 @@ namespace SchoolSystemCore.Controllers;
 public class StudentsController : Controller
 {
     private readonly CollegeDbContext _context;
-    private readonly BlobServiceClient _blobServiceClient;
-    private readonly BlobContainerClient _containerClient;
-    private const string ContainerName = "web";
-    public StudentsController(CollegeDbContext context, BlobServiceClient blobServiceClient)
+    AzureBlobService _service;
+
+    public StudentsController(CollegeDbContext context, AzureBlobService service)
     {
         _context = context;
-        _blobServiceClient = blobServiceClient;
-        _containerClient = _blobServiceClient.GetBlobContainerClient(ContainerName);
-        _containerClient.CreateIfNotExists();
+        _service = service;
     }
 
     // GET: Students
@@ -57,10 +55,8 @@ public class StudentsController : Controller
 
         if (student != null)
         {
-            string fileName = file.FileName;
-            var blobClient = _containerClient.GetBlobClient(fileName);
-            var client = await blobClient.UploadAsync(file.OpenReadStream(), true);
-            student.FileName = blobClient.Uri.ToString();
+            var response = await _service.UploadFiles(file);
+            student.FileName = $"{BlobClientUri.BlobClientUrl}/{file.FileName}";
             _context.Add(student);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
